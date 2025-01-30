@@ -1,4 +1,3 @@
-# Pipeline name
 name: Create StreamingMonitor Unlocked Package Version
 
 trigger:

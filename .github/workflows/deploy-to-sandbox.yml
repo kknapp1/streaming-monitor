@@ -1,0 +1,10 @@
+#    - script: echo "$(UAT_SFDX_URL)" > UAT_SFDX_URL.txt
+#      displayName: 'Populate auth file with DEVHUB_SFDX_URL secret'
+#
+#    - script: sf org login sfdx-url -f UAT_SFDX_URL.txt -a UAT -d
+#      displayName: 'Authenticate UAT'
+
+#    # Step 5: Install the package in UAT
+#    - script: |
+#        sf package install --package "$(PACKAGE_VERSION_ID)" --target-org UAT --apex-compile package --publish-wait 10 -w 10
+#      displayName: 'Install Package in UAT'
