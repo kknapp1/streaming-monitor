@@ -1,26 +1,27 @@
 {
-    "packageDirectories": [
-        {
-            "path": "src",
-            "default": true
-        },
-        {
-            "versionName": "ver 0.1",
-            "versionNumber": "0.1.0.NEXT",
-            "path": "src",
-            "default": false,
-            "package": "yl-smon",
-            "versionDescription": "A Lightning app for monitoring streaming events: PushTopic, generic, platform events, CDC events and monitoring events. (Forked from pozil/Streaming Monitor)"
-        }
-    ],
-    "namespace": "",
-    "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "62.0",
-    "packageAliases": {
-        "yl-smon": "0HoQP0000001EXB0A2",
-        "yl-smon@0.1.0-1": "04tQP000000K8UTYA0",
-        "yl-smon@0.1.0-2": "04tQP000000KaVZYA0",
-        "yl-smon@0.1.0-4": "04tQP000000KaaPYAS",
-        "yl-smon@0.1.0-5": "04tQP000000KaddYAC"
+  "packageDirectories": [
+    {
+      "path": "src",
+      "default": true
+    },
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "src",
+      "default": false,
+      "package": "yl-smon",
+      "versionDescription": "A Lightning app for monitoring streaming events: PushTopic, generic, platform events, CDC events and monitoring events. (Forked from pozil/Streaming Monitor)"
     }
+  ],
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "62.0",
+  "packageAliases": {
+    "yl-smon": "0HoQP0000001EXB0A2",
+    "yl-smon@0.1.0-1": "04tQP000000K8UTYA0",
+    "yl-smon@0.1.0-2": "04tQP000000KaVZYA0",
+    "yl-smon@0.1.0-4": "04tQP000000KaaPYAS",
+    "yl-smon@0.1.0-5": "04tQP000000KaddYAC",
+    "yl-smon@0.1.0-10": "04tQP000000KnhJYAS"
+  }
 }
