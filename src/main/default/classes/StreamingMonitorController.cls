@@ -78,11 +78,66 @@ public abstract class StreamingMonitorController {
 
     @AuraEnabled
     public static List<PlatformEventUsageMetric> getEventUsageMetrics() {
+        try {
+            return getEventUsageMetrics_Standard();
+        }
+        // It's not elegant but there's no good way to check whether AdvancedUsageMetrics is ENABLED.
+        // (if it's Enabled, the standard query above will throw an exception)
+        catch (Exception e) {
+            return getEventUsageMetrics_Enhanced();
+        }
+    }
+
+    public static List<PlatformEventUsageMetric> getEventUsageMetrics_Standard() {
         return [
             SELECT Name, StartDate, Value
             FROM PlatformEventUsageMetric
             ORDER BY StartDate
         ];
+    }
+
+    public static List<PlatformEventUsageMetric> getEventUsageMetrics_Enhanced() {
+        // We can only query 30 days at a time but we know metrics exist for 60 days ago
+        // https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_monitor_enhanced_usage.htm
+
+        // 30seconds less than 60 days ago (if we use exactly 60 days, then it's more than 60days to the seconds by the time the server executes it)
+        Datetime date_60daysAgo = Datetime.now().addDays(-60).addSeconds(30);
+        Datetime date_30daysAgo = Datetime.now().addDays(-30);
+        Datetime today = Datetime.now();
+
+        // We have to use dynamic SoQL. If AdvancedUsageMetrics are NOT ENABLED for an org, then this will fail to deploy
+        String query =
+            'SELECT Name, EventType, UsageType, Value, StartDate, EndDate ' +
+            'FROM PlatformEventUsageMetric ' +
+            'WHERE TimeSegment=\'Daily\' ' +
+            'and StartDate >= :startDate ' +
+            'and EndDate <= :endDate ' +
+            'ORDER BY StartDate';
+
+        // First query: 60 days ago
+        Map<String, Object> queryParams = new Map<String, Object>{
+            'startDate' => date_60daysAgo,
+            'endDate' => date_30daysAgo
+        };
+        List<PlatformEventUsageMetric> metrics = Database.queryWithBinds(
+            query,
+            queryParams,
+            AccessLevel.SYSTEM_MODE
+        );
+
+        // Second query: 30 days ago
+        // todo: i'm pretty sure there's a bug here where we might get some overlapping records since we do <= 30 and then also do >= 30
+        queryParams = new Map<String, Object>{
+            'startDate' => date_30daysAgo,
+            'endDate' => today
+        };
+        List<PlatformEventUsageMetric> moreMetrics = (Database.queryWithBinds(
+            query,
+            queryParams,
+            AccessLevel.SYSTEM_MODE
+        ));
+        metrics.addAll(moreMetrics);
+        return metrics;
     }
 
     private static void publishPlatformEvent(
